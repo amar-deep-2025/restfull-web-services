@@ -31,7 +31,12 @@ public class UserResource {
 	//Get One User
 	@GetMapping("/users/{id}")
 	public User getOneUser(@PathVariable int id) {
-		return service.findOne(id);
+		User user= service.findOne(id);
+		
+		if (user==null) {
+			throw new UserNotFoundException("id:"+id);
+		}
+		return user;
 	}
 	
 	//create Post
@@ -40,7 +45,10 @@ public class UserResource {
 		User savedUser=service.save(user);
 		
 		// /users/4 location header
-		URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId()).toUri();     	
+		URI location= ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(savedUser.getId())
+				.toUri();     	
 	
 		return ResponseEntity.created(location).build();
 	}
