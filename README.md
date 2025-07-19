@@ -8,7 +8,7 @@ A RESTful web service project built using Java and Spring Boot, integrated with 
 -->Server exception =>500
 -->Validation error =>400
 
-Important Response Status 
+# Important Response Status 
 -->200 => Success
 -->201 => Created
 -->204 => No Content
@@ -28,3 +28,9 @@ Q-->Location Header?
 ->A uri pointing to the newly created resource
 
 -->Add Exception when Resource Not Found
+
+# Implementing Generic Exception Handling for all the Resource
+1) Extends ResponseEntityExceptionHandler-> For Handle all the Exception
+2) create custom handleAllException method to handle
+3) create handleUserNotFoundException method to handle NOT_FOUND Exception 
+
