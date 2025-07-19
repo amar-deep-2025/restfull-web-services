@@ -34,3 +34,4 @@ Q-->Location Header?
 2) create custom handleAllException method to handle
 3) create handleUserNotFoundException method to handle NOT_FOUND Exception 
 
+# Implementing Delete method to delete a user resource
