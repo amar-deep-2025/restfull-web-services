@@ -43,3 +43,13 @@ Q-->Location Header?
 3) create method handleMethodArgumentNotValid with @Nullable and @Override 
 4)  Found Total Errors ex.getErrorCount() and First error provide by  ex.getFieldError().getDefaultMessage()
 5) return responseEntity with (errorDetails, StatusCode and statusBody)
+
+# Swagger UI
+1) Swagger Ui allows you to make to check, test, and document your rest APIs interactively - directly from your browser. It's powerful tool especially when working with Spring Boot APIs.
+
+2) See all your REST endpoints
+3) send Test requests
+4)  see real-time response 
+5) check request models 
+6) authorize APIs 
+7) Generate API docs
