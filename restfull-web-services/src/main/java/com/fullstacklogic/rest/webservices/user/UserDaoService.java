@@ -3,9 +3,12 @@ package com.fullstacklogic.rest.webservices.user;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @Component
 public class UserDaoService {
@@ -39,4 +42,12 @@ public class UserDaoService {
 		users.add(user);
 		return user;
 	}
+	
+	public Optional<User> findById(int id) {
+	    return users.stream()
+	                .filter(user -> user.getId() == id)
+	                .findFirst();
+	}
+
+
 }

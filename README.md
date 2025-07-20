@@ -35,3 +35,11 @@ Q-->Location Header?
 3) create handleUserNotFoundException method to handle NOT_FOUND Exception 
 
 # Implementing Delete method to delete a user resource
+1) add deleteById method
+
+# Implementing The validations
+1) @valid arguments  from jakarta.validations
+2) Pass  @Valid as arguments in  Post method with RequestBody
+3) create method handleMethodArgumentNotValid with @Nullable and @Override 
+4)  Found Total Errors ex.getErrorCount() and First error provide by  ex.getFieldError().getDefaultMessage()
+5) return responseEntity with (errorDetails, StatusCode and statusBody)
