@@ -45,11 +45,13 @@ Q-->Location Header?
 5) return responseEntity with (errorDetails, StatusCode and statusBody)
 
 # Important Annotation
-1) @NotBlack -> check empty String.
+1) @NotBlank -> check empty String.
 2) @size -> check min and max length of the String.
 3) @Pattern  -> provide regular expression for the validation.
 4) @Email -> check email format.
 5) @Past ->  check birthdate must be in past
+6) @Max -> check must be less than or equal to value
+7) @Min  -> Must be greater than or equaklt to value
 # Swagger UI
 1) Swagger Ui allows you to make to check, test, and document your rest APIs interactively - directly from your browser. It's powerful tool especially when working with Spring Boot APIs.
 
