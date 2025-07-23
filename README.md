@@ -77,7 +77,7 @@ In other word content negotiation lets the server return data in the format the 
 ## 
 Internationalization is the process of designing  your application so it can be support multiple languages and regional language setting (like data/time/currency formats) without changing your code.
 
-## Steps yto Use Internationalization in Spring boot
+## Steps to Use Internationalization in Spring boot
 
 1) Create message Properties files
 Ex : 
