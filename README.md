@@ -73,4 +73,44 @@ In other word content negotiation lets the server return data in the format the 
     <artifactId>jackson-dataformat-xml</artifactId>
 </dependency>
 
+# Internatiolization
+## 
+Internationalization is the process of designing  your application so it can be support multiple languages and regional language setting (like data/time/currency formats) without changing your code.
+
+## Steps yto Use Internationalization in Spring boot
+
+1) Create message Properties files
+Ex : 
+-->messages.properties
+-->messages_hi.properties
+-->messages_fr.properties
+
+2) Configure MessageSource bean in SpringBoot
+
+@Bean
+public MessageSource messageSource() {
+    ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+    messageSource.setBasename("messages"); // name of your properties files
+    messageSource.setDefaultEncoding("UTF-8");
+    return messageSource;
+}
+
+3) Use in Controller
+@RestController
+public class HelloWorldController {
+
+    private final MessageSource messageSource;
+
+    public HelloWorldController(MessageSource messageSource) {
+        this.messageSource = messageSource;
+    }
+
+    @GetMapping("/hello-world-internationalized")
+    public String helloWorldInternationalized() {
+        Locale locale = LocaleContextHolder.getLocale();
+        return messageSource.getMessage("good.morning.message", null, "Default Message", locale);
+    }
+}
+
+
 
