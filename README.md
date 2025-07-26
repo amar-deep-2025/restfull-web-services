@@ -4,30 +4,28 @@ A RESTful web service project built using Java and Spring Boot, integrated with 
 
 # Add Response Status 
 ->Return the correct reposnse status
--->Resource not found =>404
--->Server exception =>500
--->Validation error =>400
+->Resource not found =>404
+->Server exception =>500
+->Validation error =>400
 
 # Important Response Status 
--->200 => Success
--->201 => Created
--->204 => No Content
--->401 => Unauthorized (when authorization fails)
-
--->400 => Bad Request (such as validation error)
-
--->404 =>Resource Not Found
--->500 =>Server Error
+->200 => Success
+->201 => Created
+->204 => No Content
+->401 => Unauthorized (when authorization fails)
+->400 => Bad Request (such as validation error)
+->404 =>Resource Not Found
+->500 =>Server Error
 
 --> ResponseEntity is used to return the HTTP response status along with the response body in a Spring Boot application.
 
-Q-->Location?
+Q:Location?
 ->It tells the client where to find the newly created resource.
 
-Q-->Location Header?
-->A uri pointing to the newly created resource
+Q:>Location Header?
+ANS: A uri pointing to the newly created resource
 
--->Add Exception when Resource Not Found
+->Add Exception when Resource Not Found
 
 # Implementing Generic Exception Handling for all the Resource
 1) Extends ResponseEntityExceptionHandler-> For Handle all the Exception
@@ -57,9 +55,9 @@ Q-->Location Header?
 
 2) See all your REST endpoints
 3) send Test requests
-4)  see real-time response 
-5) check request models 
-6) authorize APIs 
+4)  see real-time response
+5) check request models
+6) authorize APIs
 7) Generate API docs
 
 # Content Negotiation
@@ -73,17 +71,17 @@ In other word content negotiation lets the server return data in the format the 
     <artifactId>jackson-dataformat-xml</artifactId>
 </dependency>
 
-# Internatiolization
-## 
+# Internationalization
+
 Internationalization is the process of designing  your application so it can be support multiple languages and regional language setting (like data/time/currency formats) without changing your code.
 
-## Steps to Use Internationalization in Spring boot
+## Steps yto Use Internationalization in Spring boot
 
 1) Create message Properties files
-Ex : 
--->messages.properties
--->messages_hi.properties
--->messages_fr.properties
+Ex :
+*messages.properties
+*messages_hi.properties
+*messages_fr.properties
 
 2) Configure MessageSource bean in SpringBoot
 
@@ -95,7 +93,8 @@ public MessageSource messageSource() {
     return messageSource;
 }
 
-3) Use in Controller
+
+3) Use in Controller :
 @RestController
 public class HelloWorldController {
 
@@ -121,27 +120,55 @@ Api versioning is the process of managing changes in your REST APIs without brea
 **You need to maintain multiple versions of the same endpoint.
 
 ## Variety Versioning options
-URL : url(/v1/person/)
-Ex : @GetMapping("/v1/person")
-	public PersonV1 getFirstVersionOfPerson() {
-		return new PersonV1("Bob Charlie");
-	}
-	
-	@GetMapping("/v2/person")
-	public PersonV2 getSecondVersionOffPerson() {
-		return new PersonV2(new Name("Boob", "Charlie"));
-	}
-Request Header :- url  (http://localhost:9090/person?version=1)
-Ex : 	@GetMapping(path="/person", params="version=1") 
-	public PersonV1 getFirstVersionOfPersonRequestParamter() {
-		return new PersonV1("Bob Charlie");
-	}
-	
-	@GetMapping(path="/person", params="version=2")
-	public PersonV2 getSecondVersionOfPersonRequestParamter() {
-		return new PersonV2(new Name("Boob", "Charlie"));
-	
-Header,
-Media Type
+## URL : url(/v1/person/)
+Ex :
+@GetMapping("/v1/person")
+public PersonV1 getFirstVersionOfPerson() {
+    return new PersonV1("Bob Charlie");
+}
+
+@GetMapping("/v2/person")
+public PersonV2 getSecondVersionOfPerson() {
+    return new PersonV2(new Name("Bob", "Charlie"));
+}
+
+
+## Request Parameter :- url  (http://localhost:9090/person?version=1)
+Ex :
+@GetMapping(path = "/person", params = "version=1")
+public PersonV1 getFirstVersionOfPersonRequestParameter() {
+    return new PersonV1("Bob Charlie");
+}
+
+@GetMapping(path = "/person", params = "version=2")
+public PersonV2 getSecondVersionOfPersonRequestParameter() {
+    return new PersonV2(new Name("Bob", "Charlie"));
+}
+
+## Request Header
+EX :
+@GetMapping(path = "/person/header", headers = "X-API-VERSION=1")
+public PersonV1 getFirstVersionOfPersonRequestHeader() {
+    return new PersonV1("Bob Charlie");
+}
+
+@GetMapping(path = "/person/header", headers = "X-API-VERSION=2")
+public PersonV2 getSecondVersionOfPersonRequestHeader() {
+    return new PersonV2(new Name("Bob", "Charlie"));
+}
+
+
+## Media Type(Content Negotiation Accept header)
+EX :
+@GetMapping(path = "/person/accept", produces = "application/vnd.company.app-v1+json")
+public PersonV1 getFirstVersionOfPersonAcceptHeader() {
+    return new PersonV1("Bob Charlie");
+}
+
+@GetMapping(path = "/person/accept", produces = "application/vnd.company.app-v2+json")
+public PersonV2 getSecondVersionOfPersonAcceptHeader() {
+    return new PersonV2(new Name("Bob", "Charlie"));
+}
+
 
 
