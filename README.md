@@ -241,4 +241,15 @@ public class User {
 		<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
 		<version>2.5.0</version>
 	</dependency>
+```  
+# Content Negotiation
+1) Content Negotitation is the mechanism used by the springboot (and rest in genral) to serve different data formats (like JSON, XML, etc) from the same API endpoint, based on the what the client asks for .  
+In other word content negotiation lets the server return data in the format the client wants (e.g; JOSN or XML) using the Accept header or URL extension.
+
+# Add Maven dependency
+```
+<dependency>
+    <groupId>com.fasterxml.jackson.dataformat</groupId>
+    <artifactId>jackson-dataformat-xml</artifactId>
+</dependency>
 ```
