@@ -108,7 +108,7 @@ public class UserResource {
 5) return responseEntity with (errorDetails, StatusCode and statusBody)  
 
 
-# Add dependency in pom.xml for the validations  
+# Add Maven dependency in pom.xml for the validations  
 ```
 		<dependency>
 			<groupId>jakarta.validation</groupId>
@@ -234,7 +234,7 @@ public class User {
 6) authorize APIs  
 7) Generate API docs  
 
-## Add Dependency 
+## Add Maven Dependency 
 ```<!-- OpenAPI Swagger UI -->
 	<dependency>
 	<groupId>org.springdoc</groupId>
