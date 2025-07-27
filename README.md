@@ -107,12 +107,16 @@ public class UserResource {
 4)  Found Total Errors ex.getErrorCount() and First error provide by  ex.getFieldError().getDefaultMessage()  
 5) return responseEntity with (errorDetails, StatusCode and statusBody)  
 
-### ✅ Bean Validation Annotations in Spring Boot
 
+# ✅ Bean Validation Annotations in Spring Boot  
 | Annotation   | Description                                                                          |
 |--------------|--------------------------------------------------------------------------------------|
 | `@NotBlank`  | Validates that the string is **not null and not empty**, after trimming whitespace. |
 | `@Size`      | Checks that the string length is within a specified **min and max** range.          |
 | `@Pattern`   | Validates the string using a **regular expression**.                                |
-| `@Email`     | Validates that th
+| `@Email`     | Validates that the string is in a **valid email format**.                           |
+| `@Past`      | Ensures the date is a **past date**.                                                |
+| `@Max`       | Checks the number is **less than or equal** to a given maximum.                     |
+| `@Min`       | Checks the number is **greater than or equal** to a given minimum.                  |
+
 
