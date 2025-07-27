@@ -108,6 +108,20 @@ public class UserResource {
 5) return responseEntity with (errorDetails, StatusCode and statusBody)  
 
 
+# Add dependency in pom.xml for the validations  
+```
+		<dependency>
+			<groupId>jakarta.validation</groupId>
+			<artifactId>jakarta.validation-api</artifactId>
+			<version>3.0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+```
+
 # ✅ Bean Validation Annotations in Spring Boot  
 | Annotation   | Description                                                                          |
 |--------------|--------------------------------------------------------------------------------------|
