@@ -365,8 +365,15 @@ See Data AND Perform Actions (Using links)
     > Difficult to maintain
 2. Use Standard Implementations  
     > HAL(JSON Hypertext Application Language): Simple format that gives a consistent and easy way to hyperlink between resources in your API.  
-    > Spring HATEOAS: Generate HAL responses with hyperlink to resources
-
+    > Spring HATEOAS: Generate HAL responses with hyperlink to resources  
+## add Maven dependecy  
+```
+	<!-- HATEOAS Support -->
+	<dependency>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-hateoas</artifactId>
+	</dependency>
+```
 
 
 
