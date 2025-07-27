@@ -197,9 +197,9 @@ Common annotations:
 * @JsonIgnoreProperties
 
 EX :
-*@JsonIgnore
-private String value2;
-
+`` @JsonIgnore
+  private String value2;
+```
 Dynamic Filtering 
 Dynamic filtering is applied at runtime, and you can control which fields to include/exclude dynamically per request controller.
 
