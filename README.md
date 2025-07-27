@@ -47,3 +47,16 @@ URI location = ServletUriComponentsBuilder.fromCurrentRequest()
     .toUri();
 
 return ResponseEntity.created(location).build();
+
+Q:Location?
+ANS: It tells the client where to find the newly created resource.
+
+Q:>Location Header?
+ANS: A uri pointing to the newly created resource
+
+Add Exception when Resource Not Found
+
+# Implementing Generic Exception Handling for all the Resource
+1) Extends ResponseEntityExceptionHandler-> For Handle all the Exception
+2) create custom handleAllException method to handle
+3) create handleUserNotFoundException method to handle NOT_FOUND Exception 
