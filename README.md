@@ -47,7 +47,7 @@ URI location = ServletUriComponentsBuilder.fromCurrentRequest()
     .toUri();
 
 return ResponseEntity.created(location).build();
-
+```
 Q:Location?
 ANS: It tells the client where to find the newly created resource.
 
