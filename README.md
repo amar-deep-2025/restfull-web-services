@@ -61,8 +61,8 @@ Add Exception when Resource Not Found
 2) create custom handleAllException method to handle
 3) create handleUserNotFoundException method to handle NOT_FOUND Exception  
 
-# Implementing RetriveAllUser method to get all user resource
-1) add deleteById method  
+# Implementing RetrieveAllUser method to get all users in resource
+1) add  RetrieveAllUser  method  
 Class :UserDaoService  
 
 ```
@@ -99,3 +99,20 @@ public class UserResource {
 		return service.getAllUser();
 	}
 ```
+
+# Implementing The validations
+1) @valid arguments  from jakarta.validations  
+2) Pass  @Valid as arguments in  Post method with RequestBody  
+3) create method handleMethodArgumentNotValid with @Nullable and @Override  
+4)  Found Total Errors ex.getErrorCount() and First error provide by  ex.getFieldError().getDefaultMessage()  
+5) return responseEntity with (errorDetails, StatusCode and statusBody)  
+
+### ✅ Bean Validation Annotations in Spring Boot
+
+| Annotation   | Description                                                                          |
+|--------------|--------------------------------------------------------------------------------------|
+| `@NotBlank`  | Validates that the string is **not null and not empty**, after trimming whitespace. |
+| `@Size`      | Checks that the string length is within a specified **min and max** range.          |
+| `@Pattern`   | Validates the string using a **regular expression**.                                |
+| `@Email`     | Validates that th
+
