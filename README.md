@@ -395,3 +395,52 @@ Dynamic filtering is applied at runtime, and you can control which fields to inc
 @JsonFilter
 @MappingJacksonValue to apply filters.
 ```  
+# Model Class :
+```
+@JsonFilter("SomeBeanFilter")
+public class SomeBean {
+
+	private String value1;
+	//@JsonIgnore
+	private String value2;
+	//@JsonIgnore
+	private String value3;
+	public SomeBean(String value1, String value2, String value3) {
+		this.value1 = value1;
+		this.value2 = value2;
+		this.value3 = value3;
+	}
+	public String getValue1() {
+		return value1;
+	}
+	public String getValue2() {
+		return value2;
+	}
+	public String getValue3() {
+		return value3;
+	}
+}
+```
+# Controller :
+```
+@RestController
+public class FilteringController {
+
+	@GetMapping("/filtering")
+	public MappingJacksonValue filtering() {
+		SomeBean someBean=new SomeBean("value1", "value2","value3");
+
+		MappingJacksonValue mappingJacksonValue=new MappingJacksonValue(someBean);
+		SimpleBeanPropertyFilter filter=SimpleBeanPropertyFilter.filterOutAllExcept("value1","value3");
+		FilterProvider filters=new SimpleFilterProvider().addFilter("SomeBeanFilter", filter);
+		mappingJacksonValue.setFilters(filters);
+		return mappingJacksonValue;
+	}
+	@GetMapping("filtering-list")
+	public List<SomeBean>  filtertingList(){
+		return Arrays.asList(new SomeBean("value1", "value2", "value3"),
+				new SomeBean("value4", "value5", "value6"));
+	}
+}
+```
+
