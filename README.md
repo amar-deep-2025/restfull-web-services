@@ -447,19 +447,21 @@ public class FilteringController {
 Spring Boot Actuator is a powerful tool that helps you to monitoring and manages your Spring Boot application in production.  
 
 ## Spring Boot Actuator Endpoints Table
-Endpoint	URL Path	Purpose
-Health	/actuator/health	Shows application health (e.g. UP/DOWN status).
-Info	/actuator/info	Displays custom app information (name, version, etc.).
-Metrics	/actuator/metrics	Provides application metrics (e.g. JVM, CPU, HTTP requests).
-Env	/actuator/env	Shows all environment properties and profiles.
-Beans	/actuator/beans	Lists all Spring beans and their dependencies.
-Loggers	/actuator/loggers	View/change logging levels of classes at runtime.
-Thread Dump	/actuator/threaddump	Dumps all thread info for debugging.
-HTTP Trace	/actuator/httptrace	Displays last few HTTP request-response traces. (disabled by default)
-Mappings	/actuator/mappings	Shows all URL paths and controller mappings.
-Scheduled Tasks	/actuator/scheduledtasks	Lists all scheduled tasks.
-Startup (from 2.3+)	/actuator/startup	Shows Spring Boot app startup steps (time taken by each phase).
-Shutdown (optional)	/actuator/shutdown	Allows app shutdown via POST (requires enabling explicitly).
+| **Endpoint**            | **URL Path**               | **Purpose**                                                             |
+| ----------------------- | -------------------------- | ----------------------------------------------------------------------- |
+| `Health`                | `/actuator/health`         | Shows application health (e.g. UP/DOWN status).                         |
+| `Info`                  | `/actuator/info`           | Displays custom app information (name, version, etc.).                  |
+| `Metrics`               | `/actuator/metrics`        | Provides application metrics (e.g. JVM, CPU, HTTP requests).            |
+| `Env`                   | `/actuator/env`            | Shows all environment properties and profiles.                          |
+| `Beans`                 | `/actuator/beans`          | Lists all Spring beans and their dependencies.                          |
+| `Loggers`               | `/actuator/loggers`        | View/change logging levels of classes at runtime.                       |
+| `Thread Dump`           | `/actuator/threaddump`     | Dumps all thread info for debugging.                                    |
+| `HTTP Trace`            | `/actuator/httptrace`      | Displays last few HTTP request-response traces. *(disabled by default)* |
+| `Mappings`              | `/actuator/mappings`       | Shows all URL paths and controller mappings.                            |
+| `Scheduled Tasks`       | `/actuator/scheduledtasks` | Lists all scheduled tasks.                                              |
+| `Startup` (from 2.3+)   | `/actuator/startup`        | Shows Spring Boot app startup steps (time taken by each phase).         |
+| `Shutdown` *(optional)* | `/actuator/shutdown`       | Allows app shutdown via POST (requires enabling explicitly).            |
+
 
 ## Add Maven dependency  
 ```
