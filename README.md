@@ -59,4 +59,43 @@ Add Exception when Resource Not Found
 # Implementing Generic Exception Handling for all the Resource
 1) Extends ResponseEntityExceptionHandler-> For Handle all the Exception
 2) create custom handleAllException method to handle
-3) create handleUserNotFoundException method to handle NOT_FOUND Exception 
+3) create handleUserNotFoundException method to handle NOT_FOUND Exception  
+
+# Implementing RetriveAllUser method to get all user resource
+1) add deleteById method  
+Class :UserDaoService  
+
+```
+@Component
+public class UserDaoService {
+
+	private static List<User> users=new ArrayList<>();
+	private static int userCount=0;
+	static {
+		users.add(new User(++userCount,"Varun","8974844894","varun@2018gmail.com",LocalDate.now().minusYears(5)));
+		users.add(new User(++userCount,"Amar","8974847839","amar@2018gmail.com",LocalDate.now().minusYears(8)));
+		users.add(new User(++userCount,"Dheeredra","8974849849","dheerendra@2018gmail.com",LocalDate.now().minusYears(10)));
+		users.add(new User(++userCount,"Kajal","8974768738","kajal@2018gmail.com",LocalDate.now().minusYears(3)));
+	}
+	
+	public List<User> getAllUser(){
+		return users;
+	}
+}
+```
+**class :UserResources  
+```
+public class UserResource {
+
+	private final UserDaoService service;
+	@Autowired
+	public UserResource(UserDaoService service) {
+		this.service = service;
+	}
+
+	// Get all users
+	@GetMapping("/users")
+	public List<User> retrieveAllUsers() {
+		return service.getAllUser();
+	}
+```
