@@ -193,19 +193,19 @@ In java (especially in Spring Bot and REST APIs) , static filtering and dynamic 
 Static filtering is hard-coded and applied at compile time using annotations. It cannot be changed at runtime.
 
 Common annotations: 
-@JsonIgnore
-@JsonIgnoreProperties
+* @JsonIgnore
+* @JsonIgnoreProperties
 
 EX :
-@JsonIgnore
+*@JsonIgnore
 private String value2;
 
 Dynamic Filtering 
 Dynamic filtering is applied at runtime, and you can control which fields to include/exclude dynamically per request controller.
 
 # Requirements 
-@JsonFilter
-@MappingJacksonValue to apply filters.
+* @JsonFilter
+* @MappingJacksonValue to apply filters.
 
 # Model Class :
 ```
