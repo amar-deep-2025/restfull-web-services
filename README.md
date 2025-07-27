@@ -224,4 +224,21 @@ public class User {
 				+ birthDate + "]";
 	}
 }
+```  
+# Swagger UI
+1) Swagger Ui allows you to make to check, test, and document your rest APIs interactively - directly from your browser. It's powerful tool especially when working with Spring Boot APIs.  
+2) See all your REST endpoints  
+3) send Test requests  
+4)  see real-time response  
+5) check request models  
+6) authorize APIs  
+7) Generate API docs  
+
+## Add Dependency 
+```<!-- OpenAPI Swagger UI -->
+	<dependency>
+	<groupId>org.springdoc</groupId>
+		<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+		<version>2.5.0</version>
+	</dependency>
 ```
