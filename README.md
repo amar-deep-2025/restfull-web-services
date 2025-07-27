@@ -165,7 +165,7 @@ public PersonV1 getFirstVersionOfPersonAcceptHeader() {
     return new PersonV1("Bob Charlie");
 }
 
-```
+
 @GetMapping(path = "/person/accept", produces = "application/vnd.company.app-v2+json")
 public PersonV2 getSecondVersionOfPersonAcceptHeader() {
     return new PersonV2(new Name("Bob", "Charlie"));
@@ -207,7 +207,8 @@ Dynamic filtering is applied at runtime, and you can control which fields to inc
 @JsonFilter
 @MappingJacksonValue to apply filters.
 
-Model Class :
+# Model Class :
+```
 @JsonFilter("SomeBeanFilter")
 public class SomeBean {
 	
@@ -235,8 +236,8 @@ public class SomeBean {
 	
 	
 }
-
-Controller :
+```
+# Controller :
 
 @RestController
 public class FilteringController {
