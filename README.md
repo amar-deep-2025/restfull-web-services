@@ -171,5 +171,17 @@ public PersonV2 getSecondVersionOfPersonAcceptHeader() {
     return new PersonV2(new Name("Bob", "Charlie"));
 }
 
+## HATEOAS
+Hypermedia as the Engine of Application State (HATEOAS).
 
+Websites allow you to:
+See Data AND Perform Actions (Using links)
+* How about enhancing your REST API to tell consumers how to perform subsequent actions ?
 
+## Implementation Options:
+1. Custom Format and Implementation
+    > Difficult to maintain
+2. Use Standard Implementations
+    > HAL(JSON Hypertext Application Language): Simple format that gives a consistent and easy way to hyperlink between resources in your API.
+
+    > Spring HATEOAS: Generate HAL responses with hyperlink to resources

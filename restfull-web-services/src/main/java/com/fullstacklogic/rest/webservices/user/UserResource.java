@@ -4,10 +4,13 @@ import java.net.URI;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,12 +45,15 @@ public class UserResource {
 
 	// Get one user
 	@GetMapping("/users/{id}")
-	public User getOneUser(@PathVariable int id) {
+	public EntityModel<User> getOneUser(@PathVariable int id) {
 		User user = service.findOne(id);
 		if (user == null) {
 			throw new UserNotFoundException("id:" + id);
 		}
-		return user;
+		EntityModel<User> entityModel=EntityModel.of(user);
+		WebMvcLinkBuilder link= linkTo(methodOn(this.getClass()).retrieveAllUsers());
+		entityModel.add(link.withRel("all-users"));
+		return entityModel;
 	}
 
 	// Create user
@@ -62,16 +68,26 @@ public class UserResource {
 
 	}
 
+	
 	// Delete user
+
 	@DeleteMapping("/users/{id}")
-	public ResponseEntity<Void> deleteUserById(@PathVariable int id) {
-		User user = service.findOne(id);
-		if (user == null) {
-			throw new UserNotFoundException("id:" + id);
-		}
-		service.deleteById(id);
-		return ResponseEntity.noContent().build();
+	public EntityModel<ResponseEntity<Void>> deleteUserById(@PathVariable int id) {
+	    User user = service.findOne(id);
+	    if (user == null) {
+	        throw new UserNotFoundException("id:" + id);
+	    }
+
+	    service.deleteById(id);
+
+	    // Build HATEOAS links
+	    EntityModel<ResponseEntity<Void>> resource = EntityModel.of(ResponseEntity.noContent().build());
+
+	    resource.add(linkTo(methodOn(UserResource.class).retrieveAllUsers()).withRel("all-users"));
+	    resource.add(linkTo(methodOn(UserResource.class).createUser(null)).withRel("create-user"));
+	    return resource;
 	}
+
 	
 	//update User
 	@PutMapping("/users/{id}")

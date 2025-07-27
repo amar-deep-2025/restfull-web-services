@@ -26,24 +26,25 @@ public class VersioningPersonController {
 		return new PersonV2(new Name("Boob", "Charlie"));
 	}
 	
-	@GetMapping(path="/person/header", headers="X-API-VERSION=1")
+	@GetMapping(path="/person/header/", headers="X-API-VERSION=1")
 	public PersonV1 getFirstVersionOfPersonRequesthaeader() {
 		return new PersonV1("Bob Charlie");
 	}
 	
-	@GetMapping(path="/person/header", headers="X-API-VERSION=2")
+	@GetMapping(path="/person/header/", headers="X-API-VERSION=2")
 	public PersonV2 getSecondVersionOfPersonRequest() {
 		return new PersonV2(new Name("Boob", "Charlie"));
 	}
 	
-	@GetMapping(path="/person/accept", produces="X-API-VERSION=1")
+	@GetMapping(path="/person/accept", produces="application/vnd.company.app-v1+json")
 	public PersonV1 getFirstVersionOfPersonAcceptHeader() {
 		return new PersonV1("Bob Charlie");
 	}
-	
-	@GetMapping(path="/person/accept", produces="X-API-VERSION=2")
+
+	@GetMapping(path="/person/accept", produces="application/vnd.company.app-v2+json")
 	public PersonV2 getSecondVersionOfPersonAcceptHeader() {
 		return new PersonV2(new Name("Boob", "Charlie"));
 	}
+
 	
 }
