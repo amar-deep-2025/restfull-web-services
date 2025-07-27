@@ -48,10 +48,10 @@ URI location = ServletUriComponentsBuilder.fromCurrentRequest()
 
 return ResponseEntity.created(location).build();
 ```
-Q:Location?
+**Q:Location?**
 ANS: It tells the client where to find the newly created resource.
 
-Q:>Location Header?
+**Q:>Location Header?**
 ANS: A uri pointing to the newly created resource
 
 Add Exception when Resource Not Found
