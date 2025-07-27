@@ -185,3 +185,78 @@ See Data AND Perform Actions (Using links)
     > HAL(JSON Hypertext Application Language): Simple format that gives a consistent and easy way to hyperlink between resources in your API.
 
     > Spring HATEOAS: Generate HAL responses with hyperlink to resources
+
+## Filtering
+In java (especially in Spring Bot and REST APIs) , static filtering and dynamic filtering are techniques used to control which fields of a model (java class) should be included or excluded in JSON response. These techniques are particularly useful in REST APIs to protect sensitive data, reduce payload size, and customize responses for different clients.
+
+# Static Filtering 
+Static filtering is hard-coded and applied at compile time using annotations. It cannot be changed at runtime.
+
+Common annotations: 
+@JsonIgnore
+@JsonIgnoreProperties
+
+EX :
+@JsonIgnore
+private String value2;
+
+Dynamic Filtering 
+Dynamic filtering is applied at runtime, and you can control which fields to include/exclude dynamically per request controller.
+
+# Requirements 
+@JsonFilter
+@MappingJacksonValue to apply filters.
+
+Model Class :
+@JsonFilter("SomeBeanFilter")
+public class SomeBean {
+	
+	private String value1;
+	//@JsonIgnore
+	private String value2;
+	//@JsonIgnore
+	private String value3;
+	public SomeBean(String value1, String value2, String value3) {
+		
+		this.value1 = value1;
+		this.value2 = value2;
+		this.value3 = value3;
+	}
+	public String getValue1() {
+		return value1;
+	}
+	public String getValue2() {
+		return value2;
+	}
+	public String getValue3() {
+		return value3;
+	}
+
+	
+	
+}
+
+Controller :
+
+@RestController
+public class FilteringController {
+
+	@GetMapping("/filtering")
+	public MappingJacksonValue filtering() {
+		SomeBean someBean=new SomeBean("value1", "value2","value3");
+		
+		MappingJacksonValue mappingJacksonValue=new MappingJacksonValue(someBean);
+		
+		SimpleBeanPropertyFilter filter=SimpleBeanPropertyFilter.filterOutAllExcept("value1","value3");
+		FilterProvider filters=new SimpleFilterProvider().addFilter("SomeBeanFilter", filter);
+		mappingJacksonValue.setFilters(filters);
+		return mappingJacksonValue;
+	}
+	
+	@GetMapping("filtering-list")
+	public List<SomeBean>  filtertingList(){
+		return Arrays.asList(new SomeBean("value1", "value2", "value3"),
+				new SomeBean("value4", "value5", "value6"));
+	}
+}
+
