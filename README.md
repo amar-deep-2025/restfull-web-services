@@ -373,7 +373,25 @@ See Data AND Perform Actions (Using links)
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-hateoas</artifactId>
 	</dependency>
+```  
+
+# Filtering
+In java (especially in Spring Bot and REST APIs) , static filtering and dynamic filtering are techniques used to control which fields of a model (java class) should be included or excluded in JSON response. These techniques are particularly useful in REST APIs to protect sensitive data, reduce payload size, and customize responses for different clients.
+
+## Static Filtering 
+Static filtering is hard-coded and applied at compile time using annotations. It cannot be changed at runtime.  
+Common annotations: 
 ```
-
-
-
+@JsonIgnore
+@JsonIgnoreProperties  
+EX :
+@JsonIgnore
+private String value2;
+```  
+## Dynamic Filtering 
+Dynamic filtering is applied at runtime, and you can control which fields to include/exclude dynamically per request controller.
+### Requirements 
+```
+@JsonFilter
+@MappingJacksonValue to apply filters.
+```  
