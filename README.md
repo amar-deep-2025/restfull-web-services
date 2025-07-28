@@ -474,7 +474,9 @@ Spring Boot Actuator is a powerful tool that helps you to monitoring and manages
 # DataBase Connectivity && JPA-Implementation  
 
 ## H2 DataBase  
-H2 is a lightweight , fast and open-source in memory-database written in Java. It is commonly used for development , testing, and demos because it doesn't require setup and can run entirely in memory. H2 also includes a built-in-web console for querying and manage data via /h2-console
+H2 is a lightweight , fast and open-source in memory-database written in Java. It is commonly used for development , testing, and demos because it doesn't require setup and can run entirely in memory. H2 also includes a built-in-web console for querying and manage data via /h2-console  
+
+
 ## JPA(Java Persistence API) :  
 JPA is a java specification that enables developers to manage relational data in a java applications. It provides an abstraction layer over ORM (Object-Relational-Mapping) tools like Hibernate. With JPA, you can map java classes to database tables using annotations like @Entity, @Id and @GeneratedValue, making database interactions simpler and more maintainable.  
 
@@ -491,6 +493,43 @@ JPA is a java specification that enables developers to manage relational data in
 | `@JoinColumn(name = "user_id")`                             | `@JoinColumn(name = "user_id")`                             | Specifies the foreign key column.                                          |
 | `@Lob`                                                      | `@Lob`                                                      | Used to store large objects like images, files, or long texts (CLOB/BLOB). |
 
-
+# add Dependencies  
+### JPA dependency  
+```
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+```  
+### Add H2 Database dependency  
+```
+<dependency>
+	<groupId>com.h2database</groupId>
+	<artifactId>h2</artifactId>
+	<scope>runtime</scope>
+</dependency>
+```
+# Application.properties 
+### Enable H2 Console  
+```
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console  
+```
+### Configure in-memory H2 DB  
+```
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=amar.deep
+spring.datasource.password=amar.deep@123
+```  
+### JPA / Hibernate settings
+```
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```  
+### Enable SQL file Loading
+```
+spring.jpa.defer-datasource-initialization=true
+```
 
 
