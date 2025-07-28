@@ -11,25 +11,35 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 
-
 @RestController
 public class FilteringController {
 
 	@GetMapping("/filtering")
 	public MappingJacksonValue filtering() {
-		SomeBean someBean=new SomeBean("value1", "value2","value3");
-		
-		MappingJacksonValue mappingJacksonValue=new MappingJacksonValue(someBean);
-		
-		SimpleBeanPropertyFilter filter=SimpleBeanPropertyFilter.filterOutAllExcept("value1","value3");
-		FilterProvider filters=new SimpleFilterProvider().addFilter("SomeBeanFilter", filter);
+		SomeBean someBean = new SomeBean("value1", "value2", "value3");
+
+		MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(someBean);
+
+		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("field1", "field3");
+		FilterProvider filters = new SimpleFilterProvider().addFilter("SomeBeanFilter", filter);
 		mappingJacksonValue.setFilters(filters);
+
 		return mappingJacksonValue;
 	}
-	
-	@GetMapping("filtering-list")
-	public List<SomeBean>  filtertingList(){
-		return Arrays.asList(new SomeBean("value1", "value2", "value3"),
-				new SomeBean("value4", "value5", "value6"));
+
+	@GetMapping("/filtering-list")
+	public MappingJacksonValue filteringList() {
+		List<SomeBean> list = Arrays.asList(
+			new SomeBean("value1", "value2", "value3"),
+			new SomeBean("value4", "value5", "value6")
+		);
+
+		MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(list);
+
+		SimpleBeanPropertyFilter filter = SimpleBeanPropertyFilter.filterOutAllExcept("field2", "field3");
+		FilterProvider filters = new SimpleFilterProvider().addFilter("SomeBeanFilter", filter);
+		mappingJacksonValue.setFilters(filters);
+
+		return mappingJacksonValue;
 	}
 }

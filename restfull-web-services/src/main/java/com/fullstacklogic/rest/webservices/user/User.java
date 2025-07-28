@@ -2,6 +2,12 @@ package com.fullstacklogic.rest.webservices.user;
 
 import java.time.LocalDate;
 
+import jakarta.annotation.Generated;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,8 +15,11 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+@Entity(name="user_details")
 public class User {
-
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@NotBlank
@@ -19,15 +28,18 @@ public class User {
 
 	@NotBlank(message = "Phone number is required")
 	@Pattern(regexp = "^[6-9]\\d{9}$", message = "Phone number must be 10 digits and start with 6-9")
+	@Column(name="phone_no")
 	private String phoneNo;
 
 	@NotBlank(message = "Email is required")
 	@Email(message = "Invalid email format")
+	@Column(name="mail_id")
 	private String mailId;
 
 
     @NotNull(message = "Birthdate is required")
 	@Past(message = "Birthdate must be in the past")
+    @Column(name="birth_date")
 	private LocalDate birthDate;
 
 	public User() {

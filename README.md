@@ -320,11 +320,12 @@ public PersonV2 getSecondVersionOfPerson() {
 }
 ```  
 ### Request Parameter :- url  (http://localhost:9090/person?version=1)
+### Request Parameter :- url  (http://localhost:9090/person?version=2)
 ```
 @GetMapping(path = "/person", params = "version=1")
 public PersonV1 getFirstVersionOfPersonRequestParameter() {
     return new PersonV1("Bob Charlie");
-}
+}```
 
 @GetMapping(path = "/person", params = "version=2")
 public PersonV2 getSecondVersionOfPersonRequestParameter() {
@@ -470,3 +471,26 @@ Spring Boot Actuator is a powerful tool that helps you to monitoring and manages
 		<artifactId>spring-boot-starter-actuator</artifactId>
 	</dependency>
 ```
+# DataBase Connectivity && JPA-Implementation  
+
+## H2 DataBase  
+H2 is a lightweight , fast and open-source in memory-database written in Java. It is commonly used for development , testing, and demos because it doesn't require setup and can run entirely in memory. H2 also includes a built-in-web console for querying and manage data via /h2-console
+## JPA(Java Persistence API) :  
+JPA is a java specification that enables developers to manage relational data in a java applications. It provides an abstraction layer over ORM (Object-Relational-Mapping) tools like Hibernate. With JPA, you can map java classes to database tables using annotations like @Entity, @Id and @GeneratedValue, making database interactions simpler and more maintainable.  
+
+| Annotation                                                  | Usage Example                                               | Description                                                                |
+| ----------------------------------------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `@Entity`                                                   | `@Entity`                                                   | Marks the class as a JPA entity (maps to a DB table).                      |
+| `@Table(name = "users")`                                    | `@Table(name = "users")`                                    | Specifies the name of the database table.                                  |
+| `@Id`                                                       | `@Id`                                                       | Specifies the primary key of the entity.                                   |
+| `@GeneratedValue(strategy = GenerationType.IDENTITY)`       | `@GeneratedValue(strategy = GenerationType.IDENTITY)`       | Auto-generates primary key values (e.g., auto-increment).                  |
+| `@Column(name = "username", nullable = false, length = 50)` | `@Column(name = "username", nullable = false, length = 50)` | Defines column properties like name, length, nullability.                  |
+| `@Transient`                                                | `@Transient`                                                | Excludes the field from persistence (not stored in the DB).                |
+| `@Temporal(TemporalType.DATE)`                              | `@Temporal(TemporalType.DATE)`                              | Specifies date type for `java.util.Date`.                                  |
+| `@OneToMany` / `@ManyToOne` / `@OneToOne` / `@ManyToMany`   | `@OneToMany(mappedBy = "user")`                             | Defines relationships between entities.                                    |
+| `@JoinColumn(name = "user_id")`                             | `@JoinColumn(name = "user_id")`                             | Specifies the foreign key column.                                          |
+| `@Lob`                                                      | `@Lob`                                                      | Used to store large objects like images, files, or long texts (CLOB/BLOB). |
+
+
+
+
