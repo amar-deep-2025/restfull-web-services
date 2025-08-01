@@ -555,4 +555,163 @@ public interface PostRepository extends JpaRepository<Post, Integer> {
 }  
 ```
 
+## Add Post Entity
+```
+package com.fullstacklogic.rest.webservices.user;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Size;
+
+@Entity
+public class Post {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int id;
+	
+	@Size(min=10)
+	private String description;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JsonIgnore
+	private User user;
+
+	public int getId() {
+		return id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	@Override
+	public String toString() {
+		return "Post [id=" + id + ", description=" + description + ", user=" + user + "]";
+	}
+	
+}
+```
+
+## Add PostNotFoundException class for handling if post not found
+```
+package com.fullstacklogic.rest.webservices.user;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(code=HttpStatus.NOT_FOUND)
+public class PostNotFoundException extends RuntimeException{
+	
+	public PostNotFoundException(String message) {
+		super(message);
+	}
+
+}
+```
+
+## Implement in CustomizeResponseEntityException for the global handling  
+```
+package com.fullstacklogic.rest.webservices.user.exception;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import com.fullstacklogic.rest.webservices.user.PostNotFoundException;
+import com.fullstacklogic.rest.webservices.user.UserNotFoundException;
+ 
+@ControllerAdvice
+public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
+ 
+	@ExceptionHandler(Exception.class)
+	public final ResponseEntity<ErrorDetails> handleAllExceptions(Exception ex, WebRequest request) throws Exception {
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), 
+				ex.getMessage(), request.getDescription(false));
+		
+		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+		
+	}
+ 
+	@ExceptionHandler(UserNotFoundException.class)
+	public final ResponseEntity<ErrorDetails> handleUserNotFoundException(Exception ex, WebRequest request) throws Exception {
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), 
+				ex.getMessage(), request.getDescription(false));
+		
+		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
+		
+	} 
+	
+	@ExceptionHandler(PostNotFoundException.class)
+	public final ResponseEntity<ErrorDetails> handlePostNotFoundException(Exception ex, WebRequest request) throws Exception {
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), 
+				ex.getMessage(), request.getDescription(false));
+		
+		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
+		
+	} 
+	
+	@Nullable
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(
+	        MethodArgumentNotValidException ex,
+	        HttpHeaders headers,
+	        HttpStatusCode status,
+	        WebRequest request) {
+
+	    List<String> errorMessages = ex.getFieldErrors().stream()
+	            .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+	            .toList();
+
+	    String combinedMessage = "Total Errors: " + ex.getErrorCount() + " | " + String.join(" | ", errorMessages);
+
+	    ErrorDetails errorDetails = new ErrorDetails(
+	            LocalDateTime.now(),
+	            combinedMessage,
+	            request.getDescription(false)
+	    );
+
+	    return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+
+	
+}
+```
+# Add UserJpaResource Controller for the endpoints  
+```
+@RestController
+public class UserJpaResource {}
+```
+
 
