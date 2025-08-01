@@ -1,7 +1,15 @@
 package com.fullstacklogic.rest.webservices.user;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import jakarta.annotation.Generated;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -9,8 +17,11 @@ import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
+@Entity(name="user_details")
 public class User {
-
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
 	@NotBlank
@@ -19,17 +30,23 @@ public class User {
 
 	@NotBlank(message = "Phone number is required")
 	@Pattern(regexp = "^[6-9]\\d{9}$", message = "Phone number must be 10 digits and start with 6-9")
+	@Column(name="phone_no")
 	private String phoneNo;
 
 	@NotBlank(message = "Email is required")
 	@Email(message = "Invalid email format")
+	@Column(name="mail_id")
 	private String mailId;
 
 
     @NotNull(message = "Birthdate is required")
 	@Past(message = "Birthdate must be in the past")
+    @Column(name="birth_date")
 	private LocalDate birthDate;
 
+    @OneToMany(mappedBy="user")
+    private List<Post> posts;
+    
 	public User() {
 	}
 
@@ -82,9 +99,18 @@ public class User {
 		this.birthDate = birthDate;
 	}
 
+	
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", phoneNo=" + phoneNo + ", mailId=" + mailId + ", birthDate="
-				+ birthDate + "]";
+				+ birthDate + ",posts="+ posts +"]";
 	}
+
 }

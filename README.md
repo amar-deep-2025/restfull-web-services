@@ -320,11 +320,12 @@ public PersonV2 getSecondVersionOfPerson() {
 }
 ```  
 ### Request Parameter :- url  (http://localhost:9090/person?version=1)
+### Request Parameter :- url  (http://localhost:9090/person?version=2)
 ```
 @GetMapping(path = "/person", params = "version=1")
 public PersonV1 getFirstVersionOfPersonRequestParameter() {
     return new PersonV1("Bob Charlie");
-}
+}```
 
 @GetMapping(path = "/person", params = "version=2")
 public PersonV2 getSecondVersionOfPersonRequestParameter() {
@@ -470,3 +471,443 @@ Spring Boot Actuator is a powerful tool that helps you to monitoring and manages
 		<artifactId>spring-boot-starter-actuator</artifactId>
 	</dependency>
 ```
+# DataBase Connectivity && JPA-Implementation  
+
+## H2 DataBase  
+H2 is a lightweight , fast and open-source in memory-database written in Java. It is commonly used for development , testing, and demos because it doesn't require setup and can run entirely in memory. H2 also includes a built-in-web console for querying and manage data via /h2-console  
+
+
+## JPA(Java Persistence API) :  
+JPA is a java specification that enables developers to manage relational data in a java applications. It provides an abstraction layer over ORM (Object-Relational-Mapping) tools like Hibernate. With JPA, you can map java classes to database tables using annotations like @Entity, @Id and @GeneratedValue, making database interactions simpler and more maintainable.  
+
+| Annotation                                                  | Usage Example                                               | Description                                                                |
+| ----------------------------------------------------------- | ----------------------------------------------------------- | -------------------------------------------------------------------------- |
+| `@Entity`                                                   | `@Entity`                                                   | Marks the class as a JPA entity (maps to a DB table).                      |
+| `@Table(name = "users")`                                    | `@Table(name = "users")`                                    | Specifies the name of the database table.                                  |
+| `@Id`                                                       | `@Id`                                                       | Specifies the primary key of the entity.                                   |
+| `@GeneratedValue(strategy = GenerationType.IDENTITY)`       | `@GeneratedValue(strategy = GenerationType.IDENTITY)`       | Auto-generates primary key values (e.g., auto-increment).                  |
+| `@Column(name = "username", nullable = false, length = 50)` | `@Column(name = "username", nullable = false, length = 50)` | Defines column properties like name, length, nullability.                  |
+| `@Transient`                                                | `@Transient`                                                | Excludes the field from persistence (not stored in the DB).                |
+| `@Temporal(TemporalType.DATE)`                              | `@Temporal(TemporalType.DATE)`                              | Specifies date type for `java.util.Date`.                                  |
+| `@OneToMany` / `@ManyToOne` / `@OneToOne` / `@ManyToMany`   | `@OneToMany(mappedBy = "user")`                             | Defines relationships between entities.                                    |
+| `@JoinColumn(name = "user_id")`                             | `@JoinColumn(name = "user_id")`                             | Specifies the foreign key column.                                          |
+| `@Lob`                                                      | `@Lob`                                                      | Used to store large objects like images, files, or long texts (CLOB/BLOB). |
+
+# add Dependencies  
+### JPA dependency  
+```
+<dependency>
+	<groupId>org.springframework.boot</groupId>
+	<artifactId>spring-boot-starter-data-jpa</artifactId>
+</dependency>
+```  
+### Add H2 Database dependency  
+```
+<dependency>
+	<groupId>com.h2database</groupId>
+	<artifactId>h2</artifactId>
+	<scope>runtime</scope>
+</dependency>
+```
+# Application.properties 
+### Enable H2 Console  
+```
+spring.h2.console.enabled=true
+spring.h2.console.path=/h2-console  
+```
+### Configure in-memory H2 DB  
+```
+spring.datasource.url=jdbc:h2:mem:testdb
+spring.datasource.driverClassName=org.h2.Driver
+spring.datasource.username=amar.deep
+spring.datasource.password=amar.deep@123
+```  
+### JPA / Hibernate settings
+```
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+```  
+### Enable SQL file Loading
+```
+spring.jpa.defer-datasource-initialization=true
+```
+# Add UserRepository and PostRepository  
+### UserRepository  
+```
+package com.fullstacklogic.rest.webservices.jpa;  
+import java.util.Optional;  
+import org.springframework.data.jpa.repository.JpaRepository;  
+import com.fullstacklogic.rest.webservices.user.User;  
+public interface UserRepository extends JpaRepository<User, Integer> {  
+	void deleteById(Optional<User> user_id);  
+}  
+```
+### PostRepository  
+```  
+package com.fullstacklogic.rest.webservices.jpa;  
+import java.util.Optional;  
+import org.springframework.data.jpa.repository.JpaRepository;  
+
+import com.fullstacklogic.rest.webservices.user.Post;  
+import com.fullstacklogic.rest.webservices.user.User;  
+
+public interface PostRepository extends JpaRepository<Post, Integer> {  
+}  
+```
+
+## Add Post Entity
+```
+package com.fullstacklogic.rest.webservices.user;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.Size;
+
+@Entity
+public class Post {
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	private int id;
+	
+	@Size(min=10)
+	private String description;
+	
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JsonIgnore
+	private User user;
+
+	public int getId() {
+		return id;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	@Override
+	public String toString() {
+		return "Post [id=" + id + ", description=" + description + ", user=" + user + "]";
+	}
+	
+}
+```
+
+## Add PostNotFoundException class for handling if post not found
+```
+package com.fullstacklogic.rest.webservices.user;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(code=HttpStatus.NOT_FOUND)
+public class PostNotFoundException extends RuntimeException{
+	
+	public PostNotFoundException(String message) {
+		super(message);
+	}
+
+}
+```
+
+## Implement in CustomizeResponseEntityException for the global handling  
+```
+package com.fullstacklogic.rest.webservices.user.exception;
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.lang.Nullable;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import com.fullstacklogic.rest.webservices.user.PostNotFoundException;
+import com.fullstacklogic.rest.webservices.user.UserNotFoundException;
+ 
+@ControllerAdvice
+public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
+ 
+	@ExceptionHandler(Exception.class)
+	public final ResponseEntity<ErrorDetails> handleAllExceptions(Exception ex, WebRequest request) throws Exception {
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), 
+				ex.getMessage(), request.getDescription(false));
+		
+		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.INTERNAL_SERVER_ERROR);
+		
+	}
+ 
+	@ExceptionHandler(UserNotFoundException.class)
+	public final ResponseEntity<ErrorDetails> handleUserNotFoundException(Exception ex, WebRequest request) throws Exception {
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), 
+				ex.getMessage(), request.getDescription(false));
+		
+		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
+		
+	} 
+	
+	@ExceptionHandler(PostNotFoundException.class)
+	public final ResponseEntity<ErrorDetails> handlePostNotFoundException(Exception ex, WebRequest request) throws Exception {
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), 
+				ex.getMessage(), request.getDescription(false));
+		
+		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
+		
+	} 
+	
+	@Nullable
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(
+	        MethodArgumentNotValidException ex,
+	        HttpHeaders headers,
+	        HttpStatusCode status,
+	        WebRequest request) {
+
+	    List<String> errorMessages = ex.getFieldErrors().stream()
+	            .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+	            .toList();
+
+	    String combinedMessage = "Total Errors: " + ex.getErrorCount() + " | " + String.join(" | ", errorMessages);
+
+	    ErrorDetails errorDetails = new ErrorDetails(
+	            LocalDateTime.now(),
+	            combinedMessage,
+	            request.getDescription(false)
+	    );
+
+	    return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	}
+
+	
+}
+```
+# Add UserJpaResource Controller for the endpoints  
+```
+@RestController
+public class UserJpaResource {}
+```
+
+## Add crud operations for the user and posts with validations
+```
+package com.fullstacklogic.rest.webservices.user;
+
+import java.net.URI;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import com.fullstacklogic.rest.webservices.jpa.PostRepository;
+import com.fullstacklogic.rest.webservices.jpa.UserRepository;
+
+import jakarta.validation.Valid;
+
+@RestController
+public class UserJpaResource {
+
+	private UserRepository userRepo;
+
+	private PostRepository postRepo;
+
+	@Autowired
+	public UserJpaResource(UserRepository userRepo, PostRepository postRepo) {
+		this.userRepo = userRepo;
+		this.postRepo = postRepo;
+	}
+
+	// Get all users
+	@GetMapping("jpa/users")
+	public List<User> retrieveAllUsers() {
+//		return service.getAllUser();
+		return userRepo.findAll();
+	}
+
+	// Get one user
+	@GetMapping("jpa/users/{id}")
+	public EntityModel<User> getOneUser(@PathVariable int id) {
+		Optional<User> user = userRepo.findById(id);
+		if (user.isEmpty()) {
+			throw new UserNotFoundException("id:" + id);
+		}
+		EntityModel<User> entityModel = EntityModel.of(user.get());
+		WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).retrieveAllUsers());
+		entityModel.add(link.withRel("all-users"));
+		return entityModel;
+	}
+
+	// Create user
+	@PostMapping("jpa/users")
+	public ResponseEntity<User> createUser(@Valid @RequestBody User user) {
+		User savedUser = userRepo.save(user);
+
+		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(savedUser.getId())
+				.toUri();
+
+		return ResponseEntity.created(location).body(savedUser);
+
+	}
+
+	// Delete user
+
+	@DeleteMapping("jpa/users/{id}")
+	public EntityModel<ResponseEntity<Void>> deleteUserById(@PathVariable int id) {
+		userRepo.deleteById(id);
+		// Build HATEOAS links
+		EntityModel<ResponseEntity<Void>> resource = EntityModel.of(ResponseEntity.noContent().build());
+
+		resource.add(linkTo(methodOn(UserJpaResource.class).retrieveAllUsers()).withRel("all-users"));
+		resource.add(linkTo(methodOn(UserJpaResource.class).createUser(null)).withRel("create-user"));
+		return resource;
+	}
+
+	// update User
+	@PutMapping("jpa/users/{id}")
+	public ResponseEntity<User> updateUser(@Valid @PathVariable int id, @RequestBody User updatedUser) {
+		Optional<User> existingUserOptional = userRepo.findById(id);
+
+		if (!existingUserOptional.isPresent()) {
+			return ResponseEntity.notFound().build();
+		}
+
+		User existingUser = existingUserOptional.get();
+
+		// Update only the fields (not the ID)
+		existingUser.setName(updatedUser.getName());
+		existingUser.setPhoneNo(updatedUser.getPhoneNo());
+		existingUser.setMailId(updatedUser.getMailId());
+		existingUser.setBirthDate(updatedUser.getBirthDate());
+
+		userRepo.save(existingUser); // Save updated user (if using list, no-op or replace in list)
+		System.out.println("Updated successfully");
+		return ResponseEntity.ok(existingUser);
+
+	}
+
+	@GetMapping("jpa/users/{id}/posts")
+	public List<Post> retrievePostsForUser(@PathVariable int id) {
+		Optional<User> user = userRepo.findById(id);
+
+		if (user.isEmpty()) {
+			throw new UserNotFoundException("id :" + id);
+		}
+		return user.get().getPosts();
+	}
+
+	@PostMapping("/jpa/users/{id}/posts")
+	public ResponseEntity<Object> createPostForUser(@PathVariable int id, @Valid @RequestBody Post post){
+		
+		Optional<User> user=userRepo.findById(id);
+		
+		if (user.isEmpty()) {
+			throw new UserNotFoundException("id :"+id);
+		}
+		
+		post.setUser(user.get());
+		Post savedPost=postRepo.save(post);
+		
+		URI location=ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(savedPost.getId())
+				.toUri();
+		return ResponseEntity.created(location).build();
+	}
+	
+	@GetMapping("/jpa/users/{userId}/posts/{postId}")
+	public ResponseEntity<Post> retrivePostForUser(@PathVariable int userId,@PathVariable int postId){
+		
+		Optional<User> user=userRepo.findById(userId);
+		
+		if (user.isEmpty()) {
+			throw new UserNotFoundException("userId :"+userId);
+		}
+		Optional<Post> post=postRepo.findById(postId);
+		
+		if (post.isEmpty()) {
+			throw new PostNotFoundException("PostId :"+postId);
+		}
+		
+		if (!post.get().getUser().getId().equals(userId)) {
+			throw new PostNotFoundException("PostId "+postId+" "+"UserId :"+userId);
+		}
+		
+		return ResponseEntity.ok(post.get());
+	}
+	
+}
+
+```
+# Add Relation between the user and post table
+
+## User.java
+```
+@OneToMany(mappedBy="user")
+private List<Post> posts;
+//Getter and Setter
+public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
+```
+
+## Post.java
+```
+@ManyToOne(fetch=FetchType.LAZY)
+@JsonIgnore
+private User user
+//Getter Setter
+public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+```
+
+
+

@@ -1,5 +1,6 @@
 package com.fullstacklogic.rest.webservices.user.exception;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -12,9 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.fullstacklogic.rest.webservices.user.PostNotFoundException;
 import com.fullstacklogic.rest.webservices.user.UserNotFoundException;
- 
- 
  
 @ControllerAdvice
 public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExceptionHandler{
@@ -36,14 +36,38 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
 		
 	} 
- 
+	
+	@ExceptionHandler(PostNotFoundException.class)
+	public final ResponseEntity<ErrorDetails> handlePostNotFoundException(Exception ex, WebRequest request) throws Exception {
+		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), 
+				ex.getMessage(), request.getDescription(false));
+		
+		return new ResponseEntity<ErrorDetails>(errorDetails, HttpStatus.NOT_FOUND);
+		
+	} 
+	
 	@Nullable
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(
-			MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-		ErrorDetails errorDetails = new ErrorDetails(LocalDateTime.now(), 
-				"Total Error"+ex.getErrorCount()+" First Error "+ex.getFieldError().getDefaultMessage(), request.getDescription(false));
-		return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
+	        MethodArgumentNotValidException ex,
+	        HttpHeaders headers,
+	        HttpStatusCode status,
+	        WebRequest request) {
+
+	    List<String> errorMessages = ex.getFieldErrors().stream()
+	            .map(fieldError -> fieldError.getField() + ": " + fieldError.getDefaultMessage())
+	            .toList();
+
+	    String combinedMessage = "Total Errors: " + ex.getErrorCount() + " | " + String.join(" | ", errorMessages);
+
+	    ErrorDetails errorDetails = new ErrorDetails(
+	            LocalDateTime.now(),
+	            combinedMessage,
+	            request.getDescription(false)
+	    );
+
+	    return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
 	}
+
 	
 }
