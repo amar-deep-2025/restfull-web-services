@@ -28,8 +28,6 @@ public class UserResource {
 
 	private final UserDaoService service;
 	
-
-	
 	
 
 	@Autowired
@@ -110,6 +108,7 @@ public class UserResource {
 
 	    return ResponseEntity.ok(existingUser);
 	}
+	
 	
 	
 

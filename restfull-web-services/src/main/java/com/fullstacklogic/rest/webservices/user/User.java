@@ -1,6 +1,7 @@
 package com.fullstacklogic.rest.webservices.user;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import jakarta.annotation.Generated;
 import jakarta.persistence.Column;
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -42,6 +44,9 @@ public class User {
     @Column(name="birth_date")
 	private LocalDate birthDate;
 
+    @OneToMany(mappedBy="user")
+    private List<Post> posts;
+    
 	public User() {
 	}
 
@@ -94,9 +99,18 @@ public class User {
 		this.birthDate = birthDate;
 	}
 
+	
+	public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
 	@Override
 	public String toString() {
 		return "User [id=" + id + ", name=" + name + ", phoneNo=" + phoneNo + ", mailId=" + mailId + ", birthDate="
-				+ birthDate + "]";
+				+ birthDate + ",posts="+ posts +"]";
 	}
+
 }
