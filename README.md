@@ -714,7 +714,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 public class UserJpaResource {}
 ```
 
-## Add crud operations for the user and posts
+## Add crud operations for the user and posts with validations
 ```
 package com.fullstacklogic.rest.webservices.user;
 
@@ -878,5 +878,36 @@ public class UserJpaResource {
 }
 
 ```
+# Add Relation between the user and post table
+
+## User.java
+```
+@OneToMany(mappedBy="user")
+private List<Post> posts;
+//Getter and Setter
+public List<Post> getPosts() {
+		return posts;
+	}
+
+	public void setPosts(List<Post> posts) {
+		this.posts = posts;
+	}
+```
+
+## Post.java
+```
+@ManyToOne(fetch=FetchType.LAZY)
+@JsonIgnore
+private User user
+//Getter Setter
+public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+```
+
 
 
