@@ -896,7 +896,7 @@ public List<Post> getPosts() {
 
 ## Post.java
 ```
-@ManyToOne(fetch=FetchType.LAZY)
+@ManyToOne(fetch=FetchType.LAZY)C
 @JsonIgnore
 private User user
 //Getter Setter
@@ -910,4 +910,48 @@ public User getUser() {
 ```
 
 
+# Security ?  
+Security refers to protecting applications, systems, and data from unauthorized access, misuse, or harm.
+
+## Advantage of Security in Software Development  
+
+1) Confidentiality(Privacy Protection)  
+Ensures sensitive data (like password, personal info, credit and details) is only accessible to authorized users.  
+
+2) Integrity(Data Trustworthiness)
+Protects data from being altered by unauthorized users or malware.  
+Ensures that data remains accurate and reliable.
+
+3) Availability(System Uptime)
+Ensures the system and data are available to users when needed.  
+
+4) Authorization(User Identity Verification) 
+Confirms that users are who they claim to be before accessing the system.
+
+5) Authorization (Access Control)  
+Ensures users can only access data and actions they are permitted to
+
+## Steps to Secure a spring Boot Application  
+1) Add Spring Security Dependency  
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-security</artifactId>
+</dependency>
+```
+when spring security is added :
+* The app is secured by default.  
+* A default login form is shown.  
+* A generated password appears in the console on startup.
+
+```
+Example :
+0146fb00-d747-4017-81f8-fab775bda428
+```  
+you can customize your username and  password add this line in application.properties file.  
+```
+spring.security.user.name=amar
+spring.security.user.password=amar.deep@123
+spring.security.user.roles=USER
+```
 
